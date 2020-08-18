@@ -4,18 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".GameActivity">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_tictactoe"
-            android:layout_width="0dp"
+            android:layout_width="270dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:textSize="18sp"
             android:text="Tic Tac Toe"
             android:textAllCaps="false"
@@ -25,9 +24,8 @@
 
         <Button
             android:id="@+id/btn_4inarow"
-            android:layout_width="0dp"
+            android:layout_width="270dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:textSize="18sp"
             android:text="4 in a Row"
             android:textAllCaps="false"
@@ -38,9 +36,8 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     </FrameLayout>
 
