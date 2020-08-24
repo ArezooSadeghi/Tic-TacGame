@@ -1,28 +1,34 @@
 package com.example.tic_tacgame;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class inaRowFragment extends Fragment implements View.OnClickListener {
 
-    private Button mButton1, mButton2, mButton3, mButton4, mButton5, mButton6, mButton7, mButton8, mButton9, mButton10, mButton11,
-    mButton12, mButton13, mButton14, mButton15, mButton16, mButton17, mButton18, mButton19, mButton20, mButton21, mButton22,
-    mButton23, mButton24, mButton25;
+    private Button[][] mButtons = new Button[5][5];
 
-    private boolean player1True = true;
+    private boolean mIsPlayerOneClicked = true;
 
-    private int roundCount;
+    private int mNumberOfMoves = 0;
 
-    private int player1Points;
-    private int player2Points;
+    private int[][] mColorOfButtons = new int[5][5];
 
+    private static final String M_COLOR_OF_BUTTONS = "mColorOfButtons";
+    private static final String M_NUMBER_OF_MOVES = "mNumberOfMoves";
+    private static final String M_IS_PLAYER_ONE_CLICKED = "mIsPlayerOneClicked";
 
     public inaRowFragment() {
     }
@@ -30,6 +36,11 @@ public class inaRowFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mNumberOfMoves = savedInstanceState.getInt(M_NUMBER_OF_MOVES);
+            mIsPlayerOneClicked = savedInstanceState.getBoolean(M_IS_PLAYER_ONE_CLICKED);
+            mColorOfButtons = (int[][]) savedInstanceState.getSerializable(M_COLOR_OF_BUTTONS);
+        }
     }
 
     @Override
@@ -39,165 +50,184 @@ public class inaRowFragment extends Fragment implements View.OnClickListener {
 
         findViews(view);
 
-        mButton1.setOnClickListener(this);
-        mButton2.setOnClickListener(this);
-        mButton3.setOnClickListener(this);
-        mButton4.setOnClickListener(this);
-        mButton5.setOnClickListener(this);
-        mButton6.setOnClickListener(this);
-        mButton7.setOnClickListener(this);
-        mButton8.setOnClickListener(this);
-        mButton9.setOnClickListener(this);
-        mButton10.setOnClickListener(this);
-        mButton11.setOnClickListener(this);
-        mButton12.setOnClickListener(this);
-        mButton13.setOnClickListener(this);
-        mButton14.setOnClickListener(this);
-        mButton15.setOnClickListener(this);
-        mButton16.setOnClickListener(this);
-        mButton17.setOnClickListener(this);
-        mButton18.setOnClickListener(this);
-        mButton19.setOnClickListener(this);
-        mButton20.setOnClickListener(this);
-        mButton21.setOnClickListener(this);
-        mButton22.setOnClickListener(this);
-        mButton23.setOnClickListener(this);
-        mButton24.setOnClickListener(this);
-        mButton25.setOnClickListener(this);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                mButtons[i][j].setOnClickListener(this);
+            }
+        }
 
+        loadState();
         return view;
     }
-    public void findViews(View view) {
-        mButton1 = view.findViewById(R.id.btn_1);
-        mButton2 = view.findViewById(R.id.btn_2);
-        mButton3 = view.findViewById(R.id.btn_3);
-        mButton4 = view.findViewById(R.id.btn_4);
-        mButton5 = view.findViewById(R.id.btn_5);
-        mButton6 = view.findViewById(R.id.btn_6);
-        mButton7 = view.findViewById(R.id.btn_7);
-        mButton8 = view.findViewById(R.id.btn_8);
-        mButton9 = view.findViewById(R.id.btn_9);
-        mButton10 = view.findViewById(R.id.btn_10);
-        mButton11 = view.findViewById(R.id.btn_11);
-        mButton12 = view.findViewById(R.id.btn_12);
-        mButton13 = view.findViewById(R.id.btn_13);
-        mButton14 = view.findViewById(R.id.btn_14);
-        mButton15 = view.findViewById(R.id.btn_15);
-        mButton16 = view.findViewById(R.id.btn_16);
-        mButton17 = view.findViewById(R.id.btn_17);
-        mButton18 = view.findViewById(R.id.btn_18);
-        mButton19 = view.findViewById(R.id.btn_19);
-        mButton20 = view.findViewById(R.id.btn_20);
-        mButton21 = view.findViewById(R.id.btn_21);
-        mButton22 = view.findViewById(R.id.btn_22);
-        mButton23 = view.findViewById(R.id.btn_23);
-        mButton24 = view.findViewById(R.id.btn_24);
-        mButton2 = view.findViewById(R.id.btn_25);
+
+    private void loadState() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (mColorOfButtons[i][j] != 0) {
+                    mButtons[i][j].setBackgroundColor(mColorOfButtons[i][j]);
+                }
+            }
+        }
+        if (checkForWin()) {
+            resetBoard();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(M_COLOR_OF_BUTTONS, mColorOfButtons);
+        outState.putInt(M_NUMBER_OF_MOVES, mNumberOfMoves);
+        outState.putBoolean(M_IS_PLAYER_ONE_CLICKED, mIsPlayerOneClicked);
+    }
+
+    private void findViews(View view) {
+        mButtons[0][0] = view.findViewById(R.id.btn_00);
+        mButtons[0][1] = view.findViewById(R.id.btn_01);
+        mButtons[0][2] = view.findViewById(R.id.btn_02);
+        mButtons[0][3] = view.findViewById(R.id.btn_03);
+        mButtons[0][4] = view.findViewById(R.id.btn_04);
+        mButtons[1][0] = view.findViewById(R.id.btn_10);
+        mButtons[1][1] = view.findViewById(R.id.btn_11);
+        mButtons[1][2] = view.findViewById(R.id.btn_12);
+        mButtons[1][3] = view.findViewById(R.id.btn_13);
+        mButtons[1][4] = view.findViewById(R.id.btn_14);
+        mButtons[2][0] = view.findViewById(R.id.btn_20);
+        mButtons[2][1] = view.findViewById(R.id.btn_21);
+        mButtons[2][2] = view.findViewById(R.id.btn_22);
+        mButtons[2][3] = view.findViewById(R.id.btn_23);
+        mButtons[2][4] = view.findViewById(R.id.btn_24);
+        mButtons[3][0] = view.findViewById(R.id.btn_30);
+        mButtons[3][1] = view.findViewById(R.id.btn_31);
+        mButtons[3][2] = view.findViewById(R.id.btn_32);
+        mButtons[3][3] = view.findViewById(R.id.btn_33);
+        mButtons[3][4] = view.findViewById(R.id.btn_34);
+        mButtons[4][0] = view.findViewById(R.id.btn_40);
+        mButtons[4][1] = view.findViewById(R.id.btn_41);
+        mButtons[4][2] = view.findViewById(R.id.btn_42);
+        mButtons[4][3] = view.findViewById(R.id.btn_43);
+        mButtons[4][4] = view.findViewById(R.id.btn_44);
     }
 
     @Override
     public void onClick(View view) {
-        if (!((Button) view).getText().toString().equals("")) {
+        int color = ((ColorDrawable) ((Button) view).getBackground()).getColor();
+        if (color != -4144960) {
             return;
         }
-        if (player1True) {
-            ((Button) view).setTextColor(Color.WHITE);
-        }else {
-            ((Button) view).setTextColor(Color.BLACK);
+        if (mIsPlayerOneClicked) {
+            ((Button) view).setBackgroundColor(Color.parseColor("#FF0000"));
+        } else {
+            ((Button) view).setBackgroundColor(Color.parseColor("#0000FF"));
         }
-        roundCount++;
-
-        /*if (checkForWin()) {
-            if (player1True) {
-                player1Wins();
-            }else {
-                player2Wins();
+        mNumberOfMoves++;
+        if (checkForWin()) {
+            if (mIsPlayerOneClicked) {
+                playerOneWins();
+            } else {
+                playerTwoWins();
             }
-        } else if (roundCount == 9) {
+        } else if (mNumberOfMoves == 25) {
             draw();
-        }else {
-            player1True = !player1True;
-        }*/
-
+        } else {
+            mIsPlayerOneClicked = !mIsPlayerOneClicked;
+        }
 
     }
-    private boolean checkForWin() {
-        String[][] colors = new String[3][3];
-        colors[0][0] = String.valueOf(mButton1.getTextColors());
-        colors[0][1] = String.valueOf(mButton2.getTextColors());
-        colors[0][2] = String.valueOf(mButton3.getTextColors());
-        colors[0][3] = String.valueOf(mButton4.getTextColors());
-        colors[0][4] = String.valueOf(mButton5.getTextColors());
-        colors[1][0] = String.valueOf(mButton6.getTextColors());
-        colors[1][1] = String.valueOf(mButton7.getTextColors());
-        colors[1][2] = String.valueOf(mButton8.getTextColors());
-        colors[1][3] = String.valueOf(mButton9.getTextColors());
-        colors[1][4] = String.valueOf(mButton10.getTextColors());
-        colors[2][0] = String.valueOf(mButton11.getTextColors());
-        colors[2][1] = String.valueOf(mButton12.getTextColors());
-        colors[2][2] = String.valueOf(mButton13.getTextColors());
-        colors[2][3] = String.valueOf(mButton14.getTextColors());
-        colors[2][4] = String.valueOf(mButton15.getTextColors());
-        colors[3][0] = String.valueOf(mButton16.getTextColors());
-        colors[3][1] = String.valueOf(mButton17.getTextColors());
-        colors[3][2] = String.valueOf(mButton18.getTextColors());
-        colors[3][3] = String.valueOf(mButton19.getTextColors());
-        colors[3][4] = String.valueOf(mButton20.getTextColors());
-        colors[4][0] = String.valueOf(mButton21.getTextColors());
-        colors[4][1] = String.valueOf(mButton22.getTextColors());
-        colors[4][2] = String.valueOf(mButton23.getTextColors());
-        colors[4][3] = String.valueOf(mButton24.getTextColors());
-        colors[4][4] = String.valueOf(mButton25.getTextColors());
 
-
+    public boolean checkForWin() {
         for (int i = 0; i < 5; i++) {
-            if ((colors[i][0].equals(colors[i][1]) && (colors[i][0].equals(colors[i][2]) && (colors[i][0].equals(colors[i][3])) && (colors[i][0].equals(colors[i][4])) &&!colors[i][0].equals("")))) {
+            for (int j = 0; j < 5; j++) {
+                mColorOfButtons[i][j] = ((ColorDrawable) mButtons[i][j].getBackground()).getColor();
+            }
+        }
+        for (int i = 0; i < 5; i++) {
+            if ((mColorOfButtons[i][0] == mColorOfButtons[i][1]) && (mColorOfButtons[i][1] == mColorOfButtons[i][2]) &&
+                    (mColorOfButtons[i][2] == mColorOfButtons[i][3]) && (mColorOfButtons[i][0] != -4144960)) {
+                return true;
+            }
+            if ((mColorOfButtons[i][1] == mColorOfButtons[i][2]) && (mColorOfButtons[i][2] == mColorOfButtons[i][3]) &&
+                    (mColorOfButtons[i][3] == mColorOfButtons[i][4]) && (mColorOfButtons[i][1] != -4144960)) {
                 return true;
             }
         }
-
         for (int i = 0; i < 5; i++) {
-            if ((colors[0][i].equals(colors[1][i]) && (colors[0][i].equals(colors[2][i]) && (colors[0][i].equals(colors[3][i])) && (colors[0][i].equals(colors[4][i])) && !colors[0][i].equals("")))) {
+            if ((mColorOfButtons[0][i] == mColorOfButtons[1][i]) && (mColorOfButtons[1][i] == mColorOfButtons[2][i]) &&
+                    (mColorOfButtons[2][i] == mColorOfButtons[3][i]) && (mColorOfButtons[0][i] != -4144960)) {
+                return true;
+            }
+            if ((mColorOfButtons[1][i] == mColorOfButtons[2][i]) && (mColorOfButtons[2][i] == mColorOfButtons[3][i]) &&
+                    (mColorOfButtons[3][i] == mColorOfButtons[4][i]) && (mColorOfButtons[1][i] != -4144960)) {
                 return true;
             }
         }
-        if ((colors[0][0].equals(colors[1][1]) && (colors[0][0].equals(colors[2][2]) && (colors[0][0].equals(colors[3][3])) && (colors[0][0].equals(colors[4][4]))  &&!colors[0][0].equals("")))) {
+        if ((mColorOfButtons[0][0] == mColorOfButtons[1][1]) && (mColorOfButtons[1][1] == mColorOfButtons[2][2]) &&
+                (mColorOfButtons[2][2] == mColorOfButtons[3][3]) && (mColorOfButtons[0][0] != -4144960)) {
             return true;
         }
-        if ((colors[0][2].equals(colors[1][1]) && (colors[0][2].equals(colors[2][0]) && !colors[0][2].equals("")))) {
+        if ((mColorOfButtons[1][1] == mColorOfButtons[2][2]) && (mColorOfButtons[2][2] == mColorOfButtons[3][3]) &&
+                (mColorOfButtons[3][3] == mColorOfButtons[4][4]) && (mColorOfButtons[1][1] != -4144960)) {
             return true;
         }
-
+        if ((mColorOfButtons[1][0] == mColorOfButtons[2][1]) && (mColorOfButtons[2][1] == mColorOfButtons[3][2]) &&
+                (mColorOfButtons[3][2] == mColorOfButtons[4][3]) && (mColorOfButtons[1][0] != -4144960)) {
+            return true;
+        }
+        if ((mColorOfButtons[0][1] == mColorOfButtons[1][2]) && (mColorOfButtons[1][2] == mColorOfButtons[2][3]) &&
+                (mColorOfButtons[2][3] == mColorOfButtons[3][4]) && (mColorOfButtons[0][1] != -4144960)) {
+            return true;
+        }
+        if ((mColorOfButtons[0][3] == mColorOfButtons[1][2]) && (mColorOfButtons[1][2] == mColorOfButtons[2][1]) &&
+                (mColorOfButtons[2][1] == mColorOfButtons[3][0]) && (mColorOfButtons[0][3] != -4144960)) {
+            return true;
+        }
+        if ((mColorOfButtons[1][4] == mColorOfButtons[2][3]) && (mColorOfButtons[2][3] == mColorOfButtons[3][2]) &&
+                (mColorOfButtons[3][2] == mColorOfButtons[4][1]) && (mColorOfButtons[1][4] != -4144960)) {
+            return true;
+        }
+        if ((mColorOfButtons[0][4] == mColorOfButtons[1][3]) && (mColorOfButtons[1][3] == mColorOfButtons[2][2]) &&
+                (mColorOfButtons[2][2] == mColorOfButtons[3][1]) && (mColorOfButtons[0][4] != -4144960)) {
+            return true;
+        }
+        if ((mColorOfButtons[1][3] == mColorOfButtons[2][2]) && (mColorOfButtons[2][2] == mColorOfButtons[3][1]) &&
+                (mColorOfButtons[3][1] == mColorOfButtons[4][0]) && (mColorOfButtons[1][3] != -4144960)) {
+            return true;
+        }
         return false;
-
     }
-    private void resetBoard() {
-        mButton1.setTextColor(Color.RED);
-        mButton2.setTextColor(Color.RED);
-        mButton3.setTextColor(Color.RED);
-        mButton4.setTextColor(Color.RED);
-        mButton5.setTextColor(Color.RED);
-        mButton6.setTextColor(Color.RED);
-        mButton7.setTextColor(Color.RED);
-        mButton8.setTextColor(Color.RED);
-        mButton9.setTextColor(Color.RED);
-        mButton10.setTextColor(Color.RED);
-        mButton11.setTextColor(Color.RED);
-        mButton12.setTextColor(Color.RED);
-        mButton13.setTextColor(Color.RED);
-        mButton14.setTextColor(Color.RED);
-        mButton15.setTextColor(Color.RED);
-        mButton16.setTextColor(Color.RED);
-        mButton17.setTextColor(Color.RED);
-        mButton18.setTextColor(Color.RED);
-        mButton19.setTextColor(Color.RED);
-        mButton20.setTextColor(Color.RED);
-        mButton21.setTextColor(Color.RED);
-        mButton22.setTextColor(Color.RED);
-        mButton23.setTextColor(Color.RED);
-        mButton24.setTextColor(Color.RED);
-        mButton25.setTextColor(Color.RED);
-        roundCount = 0;
-        player1True = true;
+
+    public void playerOneWins() {
+        Snackbar snackbar = Snackbar.make(getView(), "Player One Wins!!!", Snackbar.LENGTH_SHORT);
+        customSnackBar(snackbar);
+        resetBoard();
+    }
+
+    public void playerTwoWins() {
+        Snackbar snackbar = Snackbar.make(getView(), "Player Two Wins!!!", Snackbar.LENGTH_SHORT);
+        customSnackBar(snackbar);
+        resetBoard();
+    }
+
+    public void draw() {
+        Snackbar snackbar = Snackbar.make(getView(), "Draw!!!", Snackbar.LENGTH_SHORT);
+        customSnackBar(snackbar);
+        resetBoard();
+    }
+
+    public void customSnackBar(Snackbar snackbar) {
+        View view = snackbar.getView();
+        view.setBackgroundColor(Color.parseColor("#696969"));
+        snackbar.show();
+    }
+
+    public void resetBoard() {
+        mIsPlayerOneClicked = true;
+        mNumberOfMoves = 0;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                mButtons[i][j].setBackgroundColor(-4144960);
+            }
+        }
     }
 }
+

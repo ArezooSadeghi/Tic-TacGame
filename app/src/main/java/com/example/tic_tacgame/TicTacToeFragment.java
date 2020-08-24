@@ -1,27 +1,31 @@
 package com.example.tic_tacgame;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import java.util.Random;
+import com.google.android.material.snackbar.Snackbar;
 
 public class TicTacToeFragment extends Fragment implements View.OnClickListener {
-   private Button mButton1, mButton2, mButton3, mButton4, mButton5, mButton6, mButton7, mButton8, mButton9;
 
-    private boolean player1True = true;
+    private Button[][] mButtons = new Button[3][3];
 
-    private int roundCount;
+    private boolean mIsPlayerOneClicked = true;
 
-    private int player1Points;
-    private int player2Points;
+    private int mNumberOfMoves = 0;
 
+    private String[][] mTextOfButtons = new String[3][3];
+
+    private static final String MTEXTOFBUTTONS = "ArrayOfTextOfButtons";
+    private static final String MNUMBEROFMOVES = "Numberofmoves";
+    private static final String M_ISPLAYER_ONE_CLICKED = "mIsplayerOneClicked";
 
     public TicTacToeFragment() {
     }
@@ -29,129 +33,142 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mTextOfButtons = (String[][]) savedInstanceState.getSerializable(MTEXTOFBUTTONS);
+            mIsPlayerOneClicked = savedInstanceState.getBoolean(M_ISPLAYER_ONE_CLICKED);
+            mNumberOfMoves = savedInstanceState.getInt(MNUMBEROFMOVES);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tic_tac_toe, container, false);
-
         findViews(view);
 
-        mButton1.setOnClickListener(this);
-        mButton2.setOnClickListener(this);
-        mButton3.setOnClickListener(this);
-        mButton4.setOnClickListener(this);
-        mButton5.setOnClickListener(this);
-        mButton6.setOnClickListener(this);
-        mButton7.setOnClickListener(this);
-        mButton8.setOnClickListener(this);
-        mButton9.setOnClickListener(this);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                mButtons[i][j].setOnClickListener(this);
+            }
+        }
+
+        loadState();
 
         return view;
+    }
 
+    private void loadState() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                mButtons[i][j].setText(mTextOfButtons[i][j]);
+            }
+        }
+        if (checkForWin()) {
+            resetBoard();
+        }
+    }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(MTEXTOFBUTTONS, mTextOfButtons);
+        outState.putInt(MNUMBEROFMOVES, mNumberOfMoves);
+        outState.putBoolean(M_ISPLAYER_ONE_CLICKED, mIsPlayerOneClicked);
     }
 
     private void findViews(View view) {
-       mButton1 = view.findViewById(R.id.btn_1);
-       mButton2 = view.findViewById(R.id.btn_2);
-       mButton3 = view.findViewById(R.id.btn_3);
-       mButton4 = view.findViewById(R.id.btn_4);
-       mButton5 = view.findViewById(R.id.btn_5);
-       mButton6 = view.findViewById(R.id.btn_6);
-       mButton7 = view.findViewById(R.id.btn_7);
-       mButton8 = view.findViewById(R.id.btn_8);
-       mButton9 = view.findViewById(R.id.btn_9);
+        mButtons[0][0] = view.findViewById(R.id.btn_00);
+        mButtons[0][1] = view.findViewById(R.id.btn_01);
+        mButtons[0][2] = view.findViewById(R.id.btn_02);
+        mButtons[1][0] = view.findViewById(R.id.btn_10);
+        mButtons[1][1] = view.findViewById(R.id.btn_11);
+        mButtons[1][2] = view.findViewById(R.id.btn_12);
+        mButtons[2][0] = view.findViewById(R.id.btn_20);
+        mButtons[2][1] = view.findViewById(R.id.btn_21);
+        mButtons[2][2] = view.findViewById(R.id.btn_22);
     }
 
     @Override
     public void onClick(View view) {
-       if (!((Button) view).getText().toString().equals("")) {
-           return;
-       }
-       if (player1True) {
-           ((Button) view).setText("X");
-       }else {
-           ((Button) view).setText("O");
-       }
-       roundCount++;
+        if (!((Button) view).getText().toString().equals("")) {
+            return;
+        }
+        if (mIsPlayerOneClicked) {
+            ((Button) view).setText("X");
+        } else {
+            ((Button) view).setText("O");
+        }
+        mNumberOfMoves++;
 
-       if (checkForWin()) {
-           if (player1True) {
-               player1Wins();
-           }else {
-               player2Wins();
-           }
-       } else if (roundCount == 9) {
-           draw();
-       }else {
-           player1True = !player1True;
-       }
-
+        if (checkForWin()) {
+            if (mIsPlayerOneClicked) {
+                playerOneWins();
+            } else {
+                playerTwoWins();
+            }
+        } else if (mNumberOfMoves == 9) {
+            draw();
+        } else {
+            mIsPlayerOneClicked = !mIsPlayerOneClicked;
+        }
     }
+
     private boolean checkForWin() {
-        String[][] field = new String[3][3];
-        field[0][0] = mButton1.getText().toString();
-        field[0][1] = mButton2.getText().toString();
-        field[0][2] = mButton3.getText().toString();
-        field[1][0] = mButton4.getText().toString();
-        field[1][1] = mButton5.getText().toString();
-        field[1][2] = mButton6.getText().toString();
-        field[2][0] = mButton7.getText().toString();
-        field[2][1] = mButton8.getText().toString();
-        field[2][2] = mButton9.getText().toString();
-
         for (int i = 0; i < 3; i++) {
-            if ((field[i][0].equals(field[i][1]) && (field[i][0].equals(field[i][2]) && !field[i][0].equals("")))) {
+            for (int j = 0; j < 3; j++) {
+                mTextOfButtons[i][j] = mButtons[i][j].getText().toString();
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            if ((mTextOfButtons[i][0].equals(mTextOfButtons[i][1]) && (mTextOfButtons[i][0].equals(mTextOfButtons[i][2]) && !mTextOfButtons[i][0].equals("")))) {
                 return true;
             }
         }
-
         for (int i = 0; i < 3; i++) {
-            if ((field[0][i].equals(field[1][i]) && (field[0][i].equals(field[2][i]) && !field[0][i].equals("")))) {
+            if ((mTextOfButtons[0][i].equals(mTextOfButtons[1][i]) && (mTextOfButtons[0][i].equals(mTextOfButtons[2][i]) && !mTextOfButtons[0][i].equals("")))) {
                 return true;
             }
         }
-        if ((field[0][0].equals(field[1][1]) && (field[0][0].equals(field[2][2]) && !field[0][0].equals("")))) {
+        if ((mTextOfButtons[0][0].equals(mTextOfButtons[1][1]) && (mTextOfButtons[0][0].equals(mTextOfButtons[2][2]) && !mTextOfButtons[0][0].equals("")))) {
             return true;
         }
-        if ((field[0][2].equals(field[1][1]) && (field[0][2].equals(field[2][0]) && !field[0][2].equals("")))) {
+        if ((mTextOfButtons[0][2].equals(mTextOfButtons[1][1]) && (mTextOfButtons[0][2].equals(mTextOfButtons[2][0]) && !mTextOfButtons[0][2].equals("")))) {
             return true;
         }
-
         return false;
+    }
 
-    }
-    private void player1Wins() {
-        player1Points++;
-        Toast.makeText(getActivity(), "player 1 wins !!!", Toast.LENGTH_SHORT).show();
-        updatePointsText();
+    private void playerOneWins() {
+        Snackbar snackbar = Snackbar.make(getView(), "Player One Wins!!!", Snackbar.LENGTH_SHORT);
+        customSnackBar(snackbar);
         resetBoard();
     }
-    private void player2Wins() {
-        player2Points++;
-        Toast.makeText(getActivity(), "player 2 wins !!!", Toast.LENGTH_SHORT).show();
-        updatePointsText();
+
+    private void playerTwoWins() {
+        Snackbar snackbar = Snackbar.make(getView(), "Player Two Wins!!!", Snackbar.LENGTH_SHORT);
+        customSnackBar(snackbar);
         resetBoard();
     }
+
     private void draw() {
-        Toast.makeText(getActivity(), "Draw!", Toast.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(getView(), "Draw!!!", Snackbar.LENGTH_SHORT);
+        customSnackBar(snackbar);
         resetBoard();
     }
-    private void updatePointsText() {}
+
+    private void customSnackBar(Snackbar snackbar) {
+        View view = snackbar.getView();
+        view.setBackgroundColor(Color.parseColor("#696969"));
+        snackbar.show();
+    }
 
     private void resetBoard() {
-        mButton1.setText("");
-        mButton2.setText("");
-        mButton3.setText("");
-        mButton4.setText("");
-        mButton5.setText("");
-        mButton6.setText("");
-        mButton7.setText("");
-        mButton8.setText("");
-        mButton9.setText("");
-        roundCount = 0;
-        player1True = true;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                mButtons[i][j].setText("");
+            }
+        }
+        mNumberOfMoves = 0;
+        mIsPlayerOneClicked = true;
     }
 }

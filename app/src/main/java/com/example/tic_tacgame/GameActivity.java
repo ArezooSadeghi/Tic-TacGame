@@ -14,22 +14,18 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
         setTitle("Game");
-
         findViews();
-
         setListeners();
-
     }
 
     private void setListeners() {
         mButtonTicTacToe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               FragmentManager fragmentManager = getSupportFragmentManager();
-               TicTacToeFragment ticTacToeFragment = new TicTacToeFragment();
-               fragmentManager.beginTransaction().add(R.id.fragment_container, ticTacToeFragment).commit();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                TicTacToeFragment ticTacToeFragment = new TicTacToeFragment();
+                fragmentManager.beginTransaction().add(R.id.fragment_container, ticTacToeFragment).commit();
             }
         });
 
