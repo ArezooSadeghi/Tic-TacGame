@@ -3,26 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/Yellow"
     android:gravity="center"
-    tools:context=".TicTacToeFragment">
+    android:orientation="vertical"
+    tools:context=".fragment.TicTacToeFragment">
 
     <TextView
-        android:background="@color/orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
-        android:textStyle="bold"
+        android:background="@color/orange"
+        android:text="Game: Tic Tac Toe"
         android:textSize="30sp"
-        android:text="Game: Tic Tac Toe"/>
+        android:textStyle="bold" />
 
     <LinearLayout
-        android:layout_marginBottom="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:weightSum="9"
-        android:orientation="vertical">
+        android:layout_marginBottom="100dp"
+        android:orientation="vertical"
+        android:weightSum="9">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -30,117 +30,117 @@
             android:layout_marginLeft="150dp"
             android:layout_marginRight="150dp"
             android:layout_weight="3"
-            android:weightSum="3"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="3">
 
             <Button
-                android:layout_marginRight="2dp"
-                android:layout_marginBottom="2dp"
-                android:background="@color/silver"
                 android:id="@+id/btn_00"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@color/silver" />
 
             <Button
-                android:layout_marginRight="2dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginBottom="2dp"
-                android:background="@color/silver"
                 android:id="@+id/btn_01"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@color/silver" />
 
             <Button
-                android:layout_marginLeft="2dp"
-                android:layout_marginBottom="2dp"
-                android:background="@color/silver"
                 android:id="@+id/btn_02"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_marginLeft="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@color/silver" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="150dp"
             android:layout_marginLeft="150dp"
+            android:layout_marginRight="150dp"
             android:layout_weight="3"
-            android:weightSum="3"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="3">
 
             <Button
-                android:layout_marginRight="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
-                android:background="@color/silver"
                 android:id="@+id/btn_10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@color/silver" />
 
             <Button
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@color/silver"
                 android:id="@+id/btn_11"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@color/silver" />
 
             <Button
-                android:layout_marginLeft="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
-                android:background="@color/silver"
                 android:id="@+id/btn_12"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@color/silver" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="150dp"
             android:layout_marginLeft="150dp"
+            android:layout_marginRight="150dp"
             android:layout_weight="3"
-            android:weightSum="3"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="3">
 
             <Button
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:background="@color/silver"
                 android:id="@+id/btn_20"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <Button
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="2dp"
-                android:layout_marginLeft="2dp"
-                android:background="@color/silver"
+                android:layout_weight="1"
+                android:background="@color/silver" />
+
+            <Button
                 android:id="@+id/btn_21"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <Button
                 android:layout_marginLeft="2dp"
                 android:layout_marginTop="2dp"
-                android:background="@color/silver"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:background="@color/silver" />
+
+            <Button
                 android:id="@+id/btn_22"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:background="@color/silver" />
 
         </LinearLayout>
     </LinearLayout>

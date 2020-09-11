@@ -1,36 +1,37 @@
-package com.example.tic_tacgame;
+package com.example.tic_tacgame.fragment;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.example.tic_tacgame.R;
 import com.google.android.material.snackbar.Snackbar;
 
-public class inaRowFragment extends Fragment implements View.OnClickListener {
+public class InaRowFragment extends Fragment implements View.OnClickListener {
 
     private Button[][] mButtons = new Button[5][5];
-
-    private boolean mIsPlayerOneClicked = true;
-
-    private int mNumberOfMoves = 0;
-
     private int[][] mColorOfButtons = new int[5][5];
-
+    private boolean mIsPlayerOneClicked = true;
+    private int mNumberOfMoves = 0;
     private static final String M_COLOR_OF_BUTTONS = "mColorOfButtons";
     private static final String M_NUMBER_OF_MOVES = "mNumberOfMoves";
     private static final String M_IS_PLAYER_ONE_CLICKED = "mIsPlayerOneClicked";
 
-    public inaRowFragment() {
+    public InaRowFragment() {
+    }
+
+    public static InaRowFragment newInstance() {
+        Bundle args = new Bundle();
+        InaRowFragment inaRowFragment = new InaRowFragment();
+        inaRowFragment.setArguments(args);
+        return inaRowFragment;
     }
 
     @Override
@@ -47,17 +48,18 @@ public class inaRowFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ina_row, container, false);
-
         findViews(view);
+        setListeners();
+        loadState();
+        return view;
+    }
 
+    public void setListeners() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 mButtons[i][j].setOnClickListener(this);
             }
         }
-
-        loadState();
-        return view;
     }
 
     private void loadState() {
@@ -142,55 +144,79 @@ public class inaRowFragment extends Fragment implements View.OnClickListener {
             }
         }
         for (int i = 0; i < 5; i++) {
-            if ((mColorOfButtons[i][0] == mColorOfButtons[i][1]) && (mColorOfButtons[i][1] == mColorOfButtons[i][2]) &&
-                    (mColorOfButtons[i][2] == mColorOfButtons[i][3]) && (mColorOfButtons[i][0] != -4144960)) {
+            if ((mColorOfButtons[i][0] == mColorOfButtons[i][1]) &&
+                    (mColorOfButtons[i][1] == mColorOfButtons[i][2]) &&
+                    (mColorOfButtons[i][2] == mColorOfButtons[i][3]) &&
+                    (mColorOfButtons[i][0] != -4144960)) {
                 return true;
             }
-            if ((mColorOfButtons[i][1] == mColorOfButtons[i][2]) && (mColorOfButtons[i][2] == mColorOfButtons[i][3]) &&
-                    (mColorOfButtons[i][3] == mColorOfButtons[i][4]) && (mColorOfButtons[i][1] != -4144960)) {
+            if ((mColorOfButtons[i][1] == mColorOfButtons[i][2]) &&
+                    (mColorOfButtons[i][2] == mColorOfButtons[i][3]) &&
+                    (mColorOfButtons[i][3] == mColorOfButtons[i][4]) &&
+                    (mColorOfButtons[i][1] != -4144960)) {
                 return true;
             }
         }
         for (int i = 0; i < 5; i++) {
-            if ((mColorOfButtons[0][i] == mColorOfButtons[1][i]) && (mColorOfButtons[1][i] == mColorOfButtons[2][i]) &&
-                    (mColorOfButtons[2][i] == mColorOfButtons[3][i]) && (mColorOfButtons[0][i] != -4144960)) {
+            if ((mColorOfButtons[0][i] == mColorOfButtons[1][i]) &&
+                    (mColorOfButtons[1][i] == mColorOfButtons[2][i]) &&
+                    (mColorOfButtons[2][i] == mColorOfButtons[3][i]) &&
+                    (mColorOfButtons[0][i] != -4144960)) {
                 return true;
             }
-            if ((mColorOfButtons[1][i] == mColorOfButtons[2][i]) && (mColorOfButtons[2][i] == mColorOfButtons[3][i]) &&
-                    (mColorOfButtons[3][i] == mColorOfButtons[4][i]) && (mColorOfButtons[1][i] != -4144960)) {
+            if ((mColorOfButtons[1][i] == mColorOfButtons[2][i]) &&
+                    (mColorOfButtons[2][i] == mColorOfButtons[3][i]) &&
+                    (mColorOfButtons[3][i] == mColorOfButtons[4][i]) &&
+                    (mColorOfButtons[1][i] != -4144960)) {
                 return true;
             }
         }
-        if ((mColorOfButtons[0][0] == mColorOfButtons[1][1]) && (mColorOfButtons[1][1] == mColorOfButtons[2][2]) &&
-                (mColorOfButtons[2][2] == mColorOfButtons[3][3]) && (mColorOfButtons[0][0] != -4144960)) {
+        if ((mColorOfButtons[0][0] == mColorOfButtons[1][1]) &&
+                (mColorOfButtons[1][1] == mColorOfButtons[2][2]) &&
+                (mColorOfButtons[2][2] == mColorOfButtons[3][3]) &&
+                (mColorOfButtons[0][0] != -4144960)) {
             return true;
         }
-        if ((mColorOfButtons[1][1] == mColorOfButtons[2][2]) && (mColorOfButtons[2][2] == mColorOfButtons[3][3]) &&
-                (mColorOfButtons[3][3] == mColorOfButtons[4][4]) && (mColorOfButtons[1][1] != -4144960)) {
+        if ((mColorOfButtons[1][1] == mColorOfButtons[2][2]) &&
+                (mColorOfButtons[2][2] == mColorOfButtons[3][3]) &&
+                (mColorOfButtons[3][3] == mColorOfButtons[4][4]) &&
+                (mColorOfButtons[1][1] != -4144960)) {
             return true;
         }
-        if ((mColorOfButtons[1][0] == mColorOfButtons[2][1]) && (mColorOfButtons[2][1] == mColorOfButtons[3][2]) &&
-                (mColorOfButtons[3][2] == mColorOfButtons[4][3]) && (mColorOfButtons[1][0] != -4144960)) {
+        if ((mColorOfButtons[1][0] == mColorOfButtons[2][1]) &&
+                (mColorOfButtons[2][1] == mColorOfButtons[3][2]) &&
+                (mColorOfButtons[3][2] == mColorOfButtons[4][3]) &&
+                (mColorOfButtons[1][0] != -4144960)) {
             return true;
         }
-        if ((mColorOfButtons[0][1] == mColorOfButtons[1][2]) && (mColorOfButtons[1][2] == mColorOfButtons[2][3]) &&
-                (mColorOfButtons[2][3] == mColorOfButtons[3][4]) && (mColorOfButtons[0][1] != -4144960)) {
+        if ((mColorOfButtons[0][1] == mColorOfButtons[1][2]) &&
+                (mColorOfButtons[1][2] == mColorOfButtons[2][3]) &&
+                (mColorOfButtons[2][3] == mColorOfButtons[3][4]) &&
+                (mColorOfButtons[0][1] != -4144960)) {
             return true;
         }
-        if ((mColorOfButtons[0][3] == mColorOfButtons[1][2]) && (mColorOfButtons[1][2] == mColorOfButtons[2][1]) &&
-                (mColorOfButtons[2][1] == mColorOfButtons[3][0]) && (mColorOfButtons[0][3] != -4144960)) {
+        if ((mColorOfButtons[0][3] == mColorOfButtons[1][2]) &&
+                (mColorOfButtons[1][2] == mColorOfButtons[2][1]) &&
+                (mColorOfButtons[2][1] == mColorOfButtons[3][0]) &&
+                (mColorOfButtons[0][3] != -4144960)) {
             return true;
         }
-        if ((mColorOfButtons[1][4] == mColorOfButtons[2][3]) && (mColorOfButtons[2][3] == mColorOfButtons[3][2]) &&
-                (mColorOfButtons[3][2] == mColorOfButtons[4][1]) && (mColorOfButtons[1][4] != -4144960)) {
+        if ((mColorOfButtons[1][4] == mColorOfButtons[2][3]) &&
+                (mColorOfButtons[2][3] == mColorOfButtons[3][2]) &&
+                (mColorOfButtons[3][2] == mColorOfButtons[4][1]) &&
+                (mColorOfButtons[1][4] != -4144960)) {
             return true;
         }
-        if ((mColorOfButtons[0][4] == mColorOfButtons[1][3]) && (mColorOfButtons[1][3] == mColorOfButtons[2][2]) &&
-                (mColorOfButtons[2][2] == mColorOfButtons[3][1]) && (mColorOfButtons[0][4] != -4144960)) {
+        if ((mColorOfButtons[0][4] == mColorOfButtons[1][3]) &&
+                (mColorOfButtons[1][3] == mColorOfButtons[2][2]) &&
+                (mColorOfButtons[2][2] == mColorOfButtons[3][1]) &&
+                (mColorOfButtons[0][4] != -4144960)) {
             return true;
         }
-        if ((mColorOfButtons[1][3] == mColorOfButtons[2][2]) && (mColorOfButtons[2][2] == mColorOfButtons[3][1]) &&
-                (mColorOfButtons[3][1] == mColorOfButtons[4][0]) && (mColorOfButtons[1][3] != -4144960)) {
+        if ((mColorOfButtons[1][3] == mColorOfButtons[2][2]) &&
+                (mColorOfButtons[2][2] == mColorOfButtons[3][1]) &&
+                (mColorOfButtons[3][1] == mColorOfButtons[4][0]) &&
+                (mColorOfButtons[1][3] != -4144960)) {
             return true;
         }
         return false;

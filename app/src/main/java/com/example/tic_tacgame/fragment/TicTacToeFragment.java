@@ -1,33 +1,36 @@
-package com.example.tic_tacgame;
+package com.example.tic_tacgame.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.example.tic_tacgame.R;
 import com.google.android.material.snackbar.Snackbar;
 
 public class TicTacToeFragment extends Fragment implements View.OnClickListener {
 
     private Button[][] mButtons = new Button[3][3];
-
-    private boolean mIsPlayerOneClicked = true;
-
-    private int mNumberOfMoves = 0;
-
     private String[][] mTextOfButtons = new String[3][3];
-
+    private boolean mIsPlayerOneClicked = true;
+    private int mNumberOfMoves = 0;
     private static final String MTEXTOFBUTTONS = "ArrayOfTextOfButtons";
     private static final String MNUMBEROFMOVES = "Numberofmoves";
     private static final String M_ISPLAYER_ONE_CLICKED = "mIsplayerOneClicked";
 
     public TicTacToeFragment() {
+    }
+
+    public static TicTacToeFragment newInstance() {
+        Bundle args = new Bundle();
+        TicTacToeFragment ticTacToeFragment = new TicTacToeFragment();
+        ticTacToeFragment.setArguments(args);
+        return ticTacToeFragment;
     }
 
     @Override
@@ -45,16 +48,17 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tic_tac_toe, container, false);
         findViews(view);
+        setListeners();
+        loadState();
+        return view;
+    }
 
+    public void setListeners() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 mButtons[i][j].setOnClickListener(this);
             }
         }
-
-        loadState();
-
-        return view;
     }
 
     private void loadState() {
@@ -120,19 +124,23 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
             }
         }
         for (int i = 0; i < 3; i++) {
-            if ((mTextOfButtons[i][0].equals(mTextOfButtons[i][1]) && (mTextOfButtons[i][0].equals(mTextOfButtons[i][2]) && !mTextOfButtons[i][0].equals("")))) {
+            if ((mTextOfButtons[i][0].equals(mTextOfButtons[i][1]) && (mTextOfButtons[i][0]
+                    .equals(mTextOfButtons[i][2]) && !mTextOfButtons[i][0].equals("")))) {
                 return true;
             }
         }
         for (int i = 0; i < 3; i++) {
-            if ((mTextOfButtons[0][i].equals(mTextOfButtons[1][i]) && (mTextOfButtons[0][i].equals(mTextOfButtons[2][i]) && !mTextOfButtons[0][i].equals("")))) {
+            if ((mTextOfButtons[0][i].equals(mTextOfButtons[1][i]) && (mTextOfButtons[0][i]
+                    .equals(mTextOfButtons[2][i]) && !mTextOfButtons[0][i].equals("")))) {
                 return true;
             }
         }
-        if ((mTextOfButtons[0][0].equals(mTextOfButtons[1][1]) && (mTextOfButtons[0][0].equals(mTextOfButtons[2][2]) && !mTextOfButtons[0][0].equals("")))) {
+        if ((mTextOfButtons[0][0].equals(mTextOfButtons[1][1]) && (mTextOfButtons[0][0]
+                .equals(mTextOfButtons[2][2]) && !mTextOfButtons[0][0].equals("")))) {
             return true;
         }
-        if ((mTextOfButtons[0][2].equals(mTextOfButtons[1][1]) && (mTextOfButtons[0][2].equals(mTextOfButtons[2][0]) && !mTextOfButtons[0][2].equals("")))) {
+        if ((mTextOfButtons[0][2].equals(mTextOfButtons[1][1]) && (mTextOfButtons[0][2]
+                .equals(mTextOfButtons[2][0]) && !mTextOfButtons[0][2].equals("")))) {
             return true;
         }
         return false;
